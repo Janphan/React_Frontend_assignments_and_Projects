@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>React getting started</title>
+  </head>
+  <body>
+    <!-- Root container for react components -->
+    <div id="root"></div>
+
+    <script
+      src="https://unpkg.com/react@18/umd/react.development.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+      crossorigin
+    ></script>
+    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+
+    <script type="text/babel">
+      function ReadUserInput() {
+        const [name, setName] = React.useState({
+          firstName: "",
+          lastName: ""
+        });
+        const getMessage = () => {
+          alert("Hello " + name.firstName + " " + name.lastName);
+        };
+
+        return (
+          <React.Fragment>
+            <input
+              name="firstName"
+              placeholder="First Name"
+              value={name.firstName}
+              onChange={event => setName({...name, firstName: event.target.value})}
+              //name is an object so be careful to setName for it
+            />
+            <input
+              name="lastName"
+              placeholder="Last Name"
+              value={name.lastName}
+              onChange={event => setName({...name, lastName: event.target.value})}
+            />
+            <button onClick={getMessage}>Send</button>
+          </React.Fragment>
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(
+        <div>
+          <ReadUserInput />
+        </div>
+      );
+    </script>
+  </body>
+</html>

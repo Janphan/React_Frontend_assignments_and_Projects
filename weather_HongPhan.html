@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Front End Programming / React</title>
+  </head>
+  <body>
+    <!-- We will put our React component inside this div. -->
+    <div id="root"></div>
+
+    <!-- Load React & Babel -->
+    <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
+    <script
+      src="https://unpkg.com/react@18/umd/react.development.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+      crossorigin
+    ></script>
+    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+
+    <!-- React component code -->
+    <script type="text/babel">
+      function Weather() {
+        const [description, setDescription] = React.useState();
+        const [icon, setIcon] = React.useState();
+        const [temp, setTemp] = React.useState();
+
+        React.useEffect(() => {
+          fetch(
+            "https://api.openweathermap.org/data/2.5/weather?q=London%20&APPID=f418438ac66311d19198f65c9ab46883"
+          )
+            .then((response) => {
+              //check if status is ok
+              if (!response.ok)
+                throw new Error("Error in fetch: " + response.statusText);
+              return response.json();
+            })
+            .then((data) => {
+              if (data.weather && data.weather.length > 0) {
+                const capitalDescription = data.weather[0].description.charAt(0).toUpperCase() + data.weather[0].description.slice(1);
+                setDescription(capitalDescription);
+                setIcon(data.weather[0].icon);
+                const celsiusTemp = (data.main.temp - 273.15).toFixed(2);
+                setTemp(celsiusTemp);
+              } else {
+                setDescription("No weather information found");
+              }
+            })
+            .catch((err) => {
+              console.error(err);
+              setDescription("Failed to load weather information.");
+            });
+        }, [description, icon, temp]);
+        return (
+          <React.Fragment>
+            <h1>Weather information in London</h1>
+            <p>Temperature: {temp} ° Celcius</p>
+            <p>Weather: {description}</p>
+            <img
+              src={"https://openweathermap.org/img/wn/" + icon + "@2x.png"}
+            />
+          </React.Fragment>
+        );
+      }
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(<Weather />);
+    </script>
+  </body>
+</html>

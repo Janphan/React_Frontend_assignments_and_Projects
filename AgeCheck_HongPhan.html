@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>React getting started</title>
+  </head>
+  <body>
+    <!-- Root container for react components -->
+    <div id="root"></div>
+
+    <script
+      src="https://unpkg.com/react@18/umd/react.development.js"
+      S
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+      crossorigin
+    ></script>
+    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+
+    <script type="text/babel">
+      function AgeCheck() {
+        const [person, setInformation] = React.useState({
+          name: "",
+          age: "",
+        });
+        const [message, setMessage] = React.useState("");
+
+        const ageCheck = () => {
+          if (parseInt(person.age) >= 18) {
+            setMessage(`Hello ${person.name}!`);
+          } else {
+            setMessage("You are too young");
+          }
+        };
+
+        return (
+          <React.Fragment>
+            <p>{message}</p>
+            <p>
+              Name:{" "}
+              <input
+                name="name"
+                placeholder="Name"
+                value={person.name}
+                onChange={(event) =>
+                  setInformation({ ...person, name: event.target.value })
+                }
+              />
+            </p>
+            <p>
+              Age:{" "}
+              <input
+                name="age"
+                placeholder="Age"
+                value={person.age}
+                onChange={(event) =>
+                  setInformation({ ...person, age: event.target.value })
+                }
+              />
+            </p>
+            <button onClick={ageCheck}>Submit</button>
+          </React.Fragment>
+        );
+      }
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(
+        <div>
+          <AgeCheck />
+        </div>
+      );
+    </script>
+  </body>
+</html>

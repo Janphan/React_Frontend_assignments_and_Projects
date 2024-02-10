@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>React getting started</title>
+  </head>
+  <body>
+    <!-- Root container for react components -->
+    <div id="root"></div>
+    <script
+      src="https://unpkg.com/react@18/umd/react.development.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+      crossorigin
+    ></script>
+    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+
+    <script type="text/babel">
+      function ShowRepository() {
+        const [repository, setRepository] = React.useState([]);
+
+        React.useEffect(() => {
+          fetch("https://api.github.com/search/repositories?q=react")
+            .then((response) => {
+              if (!response.ok)
+                throw new Error("Error in request" + response.statusText);
+              return response.json();
+            })
+            .then((responseData) => setRepository(responseData.items))
+            //check response status
+            .catch((err) => console.error(err));
+        }, []);
+
+        return (
+          <React.Fragment>
+            <h1>Repositories</h1>
+            <table>
+              <tr>
+                <th>Name</th>
+                <th>URL</th>
+              </tr>
+              <tbody>
+                {repository.map((repository) => (
+                  <tr key={repository.id}>
+                    <td>{repository.full_name}</td>
+                    <td><a href = {repository.html_url} target="_blank">{repository.html_url}</a></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </React.Fragment>
+        );
+      }
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(
+        <div>
+          <ShowRepository />
+        </div>
+      );
+    </script>
+  </body>
+</html>
