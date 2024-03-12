@@ -4,12 +4,25 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-material.css";
+
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 
 import { useRef, useState } from "react";
 
 function TodoList() {
+  const lightTheme = createTheme({
+    palette: {
+      mode: 'light',
+    },
+  });
   const [todo, setTodo] = useState({
     description: "",
     date: "",
@@ -54,6 +67,12 @@ function TodoList() {
     }
     //at least one row selected
   };
+  const [selectedDate, setSelectedDate] = useState(null);
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+    let short_format_date = new Date(date).toISOString().split('T')[0];;
+    setTodo({...todo, date: short_format_date});
+  }
   return (
     <>
       <Stack direction="row" spacing={2} mt={2} justifyContent="center" alignItems="center">
@@ -69,11 +88,11 @@ function TodoList() {
           onChange={(e) => setTodo({ ...todo, priority: e.target.value })}
         />
 
-        <TextField
-          label="Date"
-          value={todo.date}
-        onChange={(e) => setTodo({ ...todo, date: e.target.value })}
-        />
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DemoContainer components={['DatePicker']}>
+        <DatePicker label="Date" onChange={(date) => handleDateChange(date)} />
+        </DemoContainer>
+        </LocalizationProvider>
 
         {/* testing */}
         <Button variant="contained" onClick={handleAdd}>
@@ -92,6 +111,10 @@ function TodoList() {
           rowSelection="single"
         />
       </div>
+      <ThemeProvider theme={lightTheme}>
+      <CssBaseline />
+      <main>This app is using the light mode</main>
+    </ThemeProvider>
     </>
   );
 }

@@ -20,9 +20,10 @@
     <script type="text/babel">
       function ShowRepository() {
         const [repository, setRepository] = React.useState([]);
+        const [keyword, setKeyword] = React.useState("react");
 
         React.useEffect(() => {
-          fetch("https://api.github.com/search/repositories?q=react")
+          fetch(`https://api.github.com/search/repositories?q=${keyword}`)
             .then((response) => {
               if (!response.ok)
                 throw new Error("Error in request" + response.statusText);
