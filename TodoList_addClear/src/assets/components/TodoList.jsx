@@ -17,6 +17,12 @@ import CssBaseline from '@mui/material/CssBaseline';
 
 import { useRef, useState } from "react";
 
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+
 function TodoList() {
   // add light theme
   const lightTheme = createTheme({
@@ -86,23 +92,24 @@ function TodoList() {
           value={todo.description}
           onChange={(e) => setTodo({ ...todo, description: e.target.value })}
         />
-         <Box sx={{ minWidth: 120 }}>
+
+        <Box sx={{ minWidth: 120 }}>
          <FormControl fullWidth>
          <InputLabel id="demo-simple-select-label">Priority</InputLabel>
          <Select
           label="Priority"
           value={todo.priority}
-          onChange={(e) => setTodo({ ...todo, priority: e.target.value })}
+          onChange={(e) => setTodo({ ...todo, priority: e.target.value })}     
         >
-        <MenuItem value={10}>Low</MenuItem>
-          <MenuItem value={20}>Medium</MenuItem>
-          <MenuItem value={30}>High</MenuItem>
+        <MenuItem value={"Low"}>Low</MenuItem>
+          <MenuItem value={"Medium"}>Medium</MenuItem>
+          <MenuItem value={"High"}>High</MenuItem>
          </Select>
         </FormControl>
         </Box>
 
-
         <LocalizationProvider dateAdapter={AdapterDayjs}>
+        
         <DatePicker 
         label="Date" 
         format = 'DD.MM.YYYY'
@@ -110,6 +117,8 @@ function TodoList() {
         onChange={(e) => setTodo({ ...todo, date: e })}/>
         {/* value date = e / since it has picked the date */}
         </LocalizationProvider>
+
+        {/* testing */}
         <Button variant="contained" onClick={handleAdd}>
           Add
         </Button>
