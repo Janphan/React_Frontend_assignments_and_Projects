@@ -4,30 +4,30 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-material.css";
 
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
 
 import { useRef, useState } from "react";
 
-import Box from '@mui/material/Box';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
+import Box from "@mui/material/Box";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 
 function TodoList() {
   // add light theme
   const lightTheme = createTheme({
     palette: {
-      mode: 'light',
+      mode: "light",
     },
   });
   //add todo state
@@ -40,7 +40,7 @@ function TodoList() {
   //add todos state
   const [todos, setTodos] = useState([]);
   const gridRef = useRef();
-  
+
   //add handle Add new todo
   const handleAdd = () => {
     if (todo.description && todo.date && todo.priority) {
@@ -50,7 +50,7 @@ function TodoList() {
       alert("Type a description, priority and date first");
     }
   };
-// add column Defs
+  // add column Defs
   const [columnDefs, setColumnDefs] = useState([
     { field: "description", sortable: true, filter: true, editable: true },
     {
@@ -63,8 +63,13 @@ function TodoList() {
           ? { color: "red" }
           : { color: "black" },
     },
-    { field: "date", sortable: true, filter: true, headerName: "Due date",
-      valueFormatter: params => params.value.format("DD.MM.YYYY") },
+    {
+      field: "date",
+      sortable: true,
+      filter: true,
+      headerName: "Due date",
+      valueFormatter: (params) => params.value.format("DD.MM.YYYY"),
+    },
   ]);
   const handleDelete = () => {
     if (gridRef.current.getSelectedNodes().length > 0) {
@@ -80,42 +85,42 @@ function TodoList() {
     }
     //at least one row selected
   };
-  
-  
+
   const handleClear = () => {
-    setTodos([]);}
+    setTodos([]);
+  };
   return (
     <>
-      <Stack direction="row" spacing={2} mt={2} justifyContent="center" alignItems="center">
+      <Stack
+        direction="row"
+        spacing={2}
+        mt={2}
+        justifyContent="center"
+        alignItems="center"
+      >
         <TextField
           label="Description"
+          placeholder="Description"
           value={todo.description}
           onChange={(e) => setTodo({ ...todo, description: e.target.value })}
         />
 
-        <Box sx={{ minWidth: 120 }}>
-         <FormControl fullWidth>
-         <InputLabel id="demo-simple-select-label">Priority</InputLabel>
-         <Select
+        <TextField
           label="Priority"
+          placeholder="Priority"
           value={todo.priority}
-          onChange={(e) => setTodo({ ...todo, priority: e.target.value })}     
-        >
-        <MenuItem value={"Low"}>Low</MenuItem>
-          <MenuItem value={"Medium"}>Medium</MenuItem>
-          <MenuItem value={"High"}>High</MenuItem>
-         </Select>
-        </FormControl>
-        </Box>
+          onChange={(e) => setTodo({ ...todo, priority: e.target.value })}
+        ></TextField>
 
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-        
-        <DatePicker 
-        label="Date" 
-        format = 'DD.MM.YYYY'
-        value={todo.date}
-        onChange={(e) => setTodo({ ...todo, date: e })}/>
-        {/* value date = e / since it has picked the date */}
+          <DatePicker
+            label="Date"
+            placeholder="Date"
+            format="DD.MM.YYYY"
+            value={todo.date}
+            onChange={(e) => setTodo({ ...todo, date: e })}
+          />
+          {/* value date = e / since it has picked the date */}
         </LocalizationProvider>
 
         {/* testing */}
@@ -129,7 +134,11 @@ function TodoList() {
           Clear
         </Button>
       </Stack>
-      <div className="ag-theme-material" style={{ width: 700, height: 500 }}>
+      <div
+        data-testid="test"
+        className="ag-theme-material"
+        style={{ width: 700, height: 500 }}
+      >
         <AgGridReact
           ref={gridRef}
           onGridReady={(params) => (gridRef.current = params.api)}
@@ -139,9 +148,9 @@ function TodoList() {
         />
       </div>
       <ThemeProvider theme={lightTheme}>
-      <CssBaseline />
-      <main>This app is using the light mode</main>
-    </ThemeProvider>
+        <CssBaseline />
+        <main>This app is using the light mode</main>
+      </ThemeProvider>
     </>
   );
 }
