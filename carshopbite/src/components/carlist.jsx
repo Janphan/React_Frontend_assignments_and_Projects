@@ -5,6 +5,9 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-material.css";
 
 import Button from "@mui/material/Button";
+
+import AddCar from "./AddCar";
+
 function Carlist() {
   const [cars, setCars] = useState([]);
 
@@ -33,7 +36,7 @@ function Carlist() {
     },
   ]);
   const fetchCars = () => {
-    fetch("https://carrestservice-carshop.rahtiapp.fi/cars")
+    fetch(import.meta.env.VITE_API_URL)
       .then((response) => {
         if (!response.ok)
           throw new Error("Error in fetch" + response.statusText);
@@ -57,15 +60,32 @@ function Carlist() {
         .catch((err) => console.error(err));
     }
   };
+  const addCar = (newCar) => {
+    fetch(import.meta.env.VITE_API_URL,
+      {
+        method: "POST",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify(newCar),
+      })
+      .then((response) => {
+        if (!response.ok) throw new Error("Error when adding car");
+        return response.json();
+      })
+      .then(() => fetchCars())
+      .catch((err) => console.error(err));
+  };
   return (
-    <div className="ag-theme-material" style={{ height: 600 }}>
-      <AgGridReact
-        rowData={cars}
-        columnDefs={colDefs}
-        pagination={true}
-        paginationAutoPageSize={true}
-      />
-    </div>
+    <>
+      <AddCar addCar={addCar} />
+      <div className="ag-theme-material" style={{ height: 600 }}>
+        <AgGridReact
+          rowData={cars}
+          columnDefs={colDefs}
+          pagination={true}
+          paginationAutoPageSize={true}
+        />
+      </div>
+    </>
   );
 }
 
