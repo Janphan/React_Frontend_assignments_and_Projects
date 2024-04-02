@@ -7,6 +7,8 @@ import "ag-grid-community/styles/ag-theme-material.css";
 import Button from "@mui/material/Button";
 
 import AddCar from "./AddCar";
+import EditCar from "./EditCar";
+import { getCars } from "../carapi";
 
 function Carlist() {
   const [cars, setCars] = useState([]);
@@ -24,6 +26,12 @@ function Carlist() {
     { field: "price", filter: true },
     {
       cellRenderer: (params) => (
+        <EditCar data={params.data} updateCar={updateCar} />
+      ),
+      width: 150,
+    },
+    {
+      cellRenderer: (params) => (
         <Button
           size="small"
           color="error"
@@ -36,13 +44,7 @@ function Carlist() {
     },
   ]);
   const fetchCars = () => {
-    fetch(import.meta.env.VITE_API_URL)
-      .then((response) => {
-        if (!response.ok)
-          throw new Error("Error in fetch" + response.statusText);
-
-        return response.json();
-      })
+    getCars()
       .then((data) => setCars(data._embedded.cars))
       .catch((err) => console.error(err));
   };
@@ -61,14 +63,27 @@ function Carlist() {
     }
   };
   const addCar = (newCar) => {
-    fetch(import.meta.env.VITE_API_URL,
-      {
-        method: "POST",
-        headers: { "Content-type": "application/json" },
-        body: JSON.stringify(newCar),
-      })
+    fetch(import.meta.env.VITE_API_URL, {
+      method: "POST",
+      headers: { "Content-type": "application/json" },
+      body: JSON.stringify(newCar),
+    })
       .then((response) => {
         if (!response.ok) throw new Error("Error when adding car");
+        return response.json();
+      })
+      .then(() => fetchCars())
+      .catch((err) => console.error(err));
+  };
+
+  const updateCar = (url, updatedCar) => {
+    fetch(url, {
+      method: "PUT",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(updatedCar),
+    })
+      .then((response) => {
+        if (!response.ok) throw new Error("Error when updating car");
         return response.json();
       })
       .then(() => fetchCars())
